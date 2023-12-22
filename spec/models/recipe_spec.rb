@@ -18,22 +18,22 @@ RSpec.describe Recipe, type: :model do
   end
 
   describe 'scopes' do
-    describe '.with_raiting_higher_than' do
+    describe '.with_rating_higher_than' do
       context 'when given value is not a number' do
         it 'raises ArgumentError' do
-          expect { described_class.with_raiting_higher_or_equal_to('brr') }.to raise_error(ArgumentError)
+          expect { described_class.with_rating_higher_or_equal_to('brr') }.to raise_error(ArgumentError)
         end
       end
 
       context 'when given value is a number' do
-        let!(:recipe) { create(:recipe, :with_3_ratings) }
+        let!(:recipe) { create(:recipe, :with_3_ratings) } # average rating for these recipes is 4
 
         it 'returns recipes with average rating higher or equal to the given value' do
-          expect(described_class.with_raiting_higher_or_equal_to(4)).to include(recipe)
+          expect(described_class.with_rating_higher_or_equal_to(4)).to include(recipe)
         end
 
         it 'does not return recipes with average rating lower than the given value' do
-          expect(described_class.with_raiting_higher_or_equal_to(4.1)).not_to include(recipe)
+          expect(described_class.with_rating_higher_or_equal_to(4.1)).not_to include(recipe)
         end
       end
     end
