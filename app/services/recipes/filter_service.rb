@@ -14,16 +14,21 @@ module Recipes
     private
 
     def initialize(params)
-      @recipes = Recipe.all
       @rating = params[:rating].to_f
       @ingredients_ids = params[:ingredients_ids]
+      @cached_recipes = cached_recipes
+      @recipes = @cached_recipes || Recipe.all
     end
     
     def filter_recipes
-      filter_by_rating
-      filter_by_ingredients
+      return @cached_recipes if @cached_recipes # can be an empty array
 
-      @recipes
+      cached_recipes do
+        filter_by_rating
+        filter_by_ingredients
+
+        @recipes.pluck(:id)
+      end
     end
 
     def filter_by_rating
@@ -40,6 +45,18 @@ module Recipes
       return if @ingredients_ids.nil? || @ingredients_ids.empty?
 
       @recipes = @recipes.with_ingredients(@ingredients_ids)
+    end
+
+    def cached_recipes(&block)
+      return Rails.cache.read(cache_key) unless block_given?
+
+      return Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
+        yield
+      end
+    end
+
+    def cache_key
+      "recipes_filtered_by_rating_#{@rating}_ingredients_#{@ingredients_ids&.sort&.join('_')}"
     end
   end
 end
