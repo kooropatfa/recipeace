@@ -12,10 +12,17 @@ class Recipe < ApplicationRecord
     joins(:recipe_ratings)
       .group('recipes.id')
       .having("AVG(recipe_ratings.value) >= ?", rating)
+      .order("AVG(recipe_ratings.value) DESC")
   end
 
   scope :with_ingredients, ->(ids) do
     joins(:recipe_ingredients)
       .where(recipe_ingredients: { ingredient_id: ids })
+      .group('recipes.id')
+      .having('COUNT(DISTINCT recipe_ingredients.ingredient_id) >= ?', ids.length)
+  end
+
+  def rating
+    recipe_ratings.average(:value).to_f.round(1)
   end
 end
