@@ -2,23 +2,39 @@
 
 class RecipesChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "recipe_channel_#{params[:channel_id]}"
+    stream_from channel
   end
 
-  def unsubscribed
-    error = 'Action not foreseen ;)'
-    ActionCable.server.broadcast(channel(params[:channel_id]), error: error) 
+  def unsubscribe
+    ActionCable.server.broadcast(channel, 'Action not foreseen ;)')
   end
 
   def filter_recipes(data)
-    recipes = Recipes::FilterService.new(params).filter_recipes.as_json
+    recipes_ids = Recipes::FilterService.new(data.with_indifferent_access).call
 
-    ActionCable.server.broadcast(channel(params[:channel_id]), recipes: recipes)
+    recipes = sort_and_serialize(recipes_ids)    
+
+    ActionCable.server.broadcast(channel, { recipes: recipes })
   end
 
   private
 
-  def channel(channel_id)
-    "recipes_channel_#{channel_id}"
+  def channel
+    "recipes_channel_#{params[:channel_id]}"
+  end
+
+  # I'm leaving this method here for now,
+  # but it should be moved to a service or a decorator.
+  def sort_and_serialize(recipes_ids)
+    Recipe.includes(:ingredients)
+      .where(id: recipes_ids)
+      .order(:title).map do |recipe|
+        recipe.serializable_hash(methods: :rating,
+                                include: {
+                                  recipe_ingredients: {
+                                    include: :ingredient 
+                                  }
+                                })
+    end
   end
 end

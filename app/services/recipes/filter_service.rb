@@ -2,8 +2,7 @@
 
 module Recipes
   class FilterService
-    
-    def self.call(params: {})
+    def self.call()
       new(params).call
     end
     
@@ -13,21 +12,24 @@ module Recipes
 
     private
 
-    def initialize(params)
-      @rating = params[:rating].to_f
+    def initialize(params = {})
+      @rating = params[:rating].to_f if params[:rating]
       @ingredients_ids = params[:ingredients_ids]
-      @cached_recipes = cached_recipes
-      @recipes = @cached_recipes || Recipe.all
+      @cached_recipes_ids = cached_recipes_ids
+      @recipes = Recipe.where(id: @cached_recipes_ids || Recipe.ids)
     end
     
     def filter_recipes
-      return @cached_recipes if @cached_recipes # can be an empty array
+      return @recipes if @cached_recipes_ids # can be an empty array
 
-      cached_recipes do
+      cached_recipes_ids do
         filter_by_rating
         filter_by_ingredients
 
-        @recipes.pluck(:id)
+        # Caching only IDs as the recipes can be updated over time.
+        # It would be better to cache the whole recipes, but it would require
+        # cache key based on the last update of the recipe and its ratings.
+        @recipes.ids
       end
     end
 
@@ -47,7 +49,7 @@ module Recipes
       @recipes = @recipes.with_ingredients(@ingredients_ids)
     end
 
-    def cached_recipes(&block)
+    def cached_recipes_ids(&block)
       return Rails.cache.read(cache_key) unless block_given?
 
       return Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
