@@ -22,7 +22,9 @@ module Recipeace
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
-    config.cache_store = :redis_cache_store, {url: ENV['REDIS_HOST'], expires_in: 30.minutes }
+    config.cache_store = :redis_cache_store, {url: ENV.fetch('REDIS_HOST', nil), expires_in: 30.minutes }
+
+    config.web_socket_url = ENV.fetch('WEBSOCKET_URL', nil)
 
     # Configuration for the application, engines, and railties goes here.
     #
