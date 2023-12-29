@@ -1,17 +1,29 @@
-- cache(['recipes_index', @ingredients, @cache_version]) do
+/ - cache(['recipes_index', @ingredients, @cache_version]) do
 
-  h1(data-web-socket-url="#{Rails.application.config.web_socket_url}")
-    | Recipes
+.text-center.
+  h1.mt-3(data-web-socket-url="#{Rails.application.config.web_socket_url}")
+    | Recipeace
+  h4.text-center.m-3
+    | Find recipes basing on ingredients you have at home
 
-  h2 Filter by rating
+  h3 Filter by rating
 
-  input#recipes-rating-slider(type="range" min="0" max="5" step="0.1" value="0")
+  input#recipes-rating-slider(type='range' min='0' max='5' step='0.1' value='0')
   span#rating-tooltip
 
-  h2 Filter by ingredients
-  - @ingredients.each do |ingredient|
-    button.ingredient-filter-btn(data-ingredient-id="#{ingredient.id}")= ingredient.name
+  h3 Filter by ingredients
 
+- @ingredients.each do |ingredient|
+  button.btn.btn-outline-secondary.btn-xs.m-1.ingredient-filter-btn(data-ingredient-id="#{ingredient.id}")
+    = ingredient.name
+
+.text-center
+  button.btn.btn-xs.btn-outline-info.m-4#reset-filters Reset Filters
+
+.container.mt-2
   ul#recipes-list
+    .text-center.mt-5.mr-2
+      .spinner-border.text-success[role="status"]
+        span.visually-hidden
+          | Loading...
 
-  button#reset-filters Reset Filters

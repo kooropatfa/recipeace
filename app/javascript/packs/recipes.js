@@ -119,7 +119,13 @@ class RecipesApp {
     ingredientButtons.forEach((button) => {
       const ingredientId = button.dataset.ingredientId;
       const isSelected = this.selectedIngredients.includes(ingredientId);
-      button.classList.toggle('active', isSelected);
+      if (isSelected) {
+        button.classList.remove('btn-outline-secondary');
+        button.classList.add('btn-outline-success');
+      } else {
+        button.classList.remove('btn-outline-success');
+        button.classList.add('btn-outline-secondary');
+      }
     });
   }
 
