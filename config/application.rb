@@ -26,6 +26,8 @@ module Recipeace
 
     config.web_socket_url = ENV.fetch('WEBSOCKET_URL', nil)
 
+    config.assets.paths << Rails.root.join('node_modules')
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
