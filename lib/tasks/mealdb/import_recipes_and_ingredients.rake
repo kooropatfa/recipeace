@@ -5,7 +5,7 @@ namespace :mealdb do
   task import_recipes_and_ingredients: :environment do
     mealdb_api_url = 'https://www.themealdb.com/api/json/v1/1/random.php'
 
-    25.times do
+    75.times do
       response = HTTParty.get(mealdb_api_url)
 
       if response.code == 200
