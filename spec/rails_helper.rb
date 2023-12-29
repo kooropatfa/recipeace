@@ -13,7 +13,7 @@ require 'rspec/rails'
 # in _spec.rb will both be required and run as specs, causing the specs to be
 # run twice. It is recommended that you do not name files matching this glob to
 # end with _spec.rb. You can configure this pattern with the --pattern
-# option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
+# option on the command line or in ~/.rspec, .rspec or `.rspec-local`
 #
 # The following line is provided for convenience purposes. It has the downside
 # of increasing the boot-up time by auto-requiring all files in the support
@@ -29,6 +29,44 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
+
+require 'capybara/rspec'
+require 'selenium/webdriver'
+
+options = Selenium::WebDriver::Chrome::Options.new
+options.add_preference(:download, prompt_for_download: false,
+                                  default_directory: '/tmp/downloads')
+
+options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  options.add_argument('--headless')
+  options.add_argument('--disable-gpu')
+  options.add_argument('--window-size=1280,800')
+
+  driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+
+  ### Allow file downloads in Google Chrome when headless!!!
+  ### https://bugs.chromium.org/p/chromium/issues/detail?id=696481#c89
+  bridge = driver.browser.send(:bridge)
+
+  path = '/session/:session_id/chromium/send_command'
+  path[':session_id'] = bridge.session_id
+
+  bridge.http.call(:post, path, cmd: 'Page.setDownloadBehavior',
+                                params: {
+                                  behavior: 'allow',
+                                  downloadPath: '/tmp/downloads'
+                                })
+  driver
+end
+
+Capybara.javascript_driver = ENV['GUI'] ? :chrome : :headless_chrome
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include(Shoulda::Matchers::ActiveModel, type: :model)
