@@ -97,7 +97,12 @@ class RecipesApp {
 
         thiz.toggleIngredientSelection(ingredientId);
 
-        thiz.recipesChannel.filter_recipes({ rating: null, ingredients_ids: thiz.selectedIngredients });
+        // It could be refactored to use this.rating in every listener that needs this value
+        // For now I'm leaving it as it is because I'm
+        const ratingFilter = document.getElementById('recipes-rating-slider');
+        const rating = parseFloat(ratingFilter.value);
+
+        thiz.recipesChannel.filter_recipes({ rating: rating, ingredients_ids: thiz.selectedIngredients });
 
         thiz.updateIngredientButtonsUI();
       });
@@ -131,8 +136,16 @@ class RecipesApp {
 
   setupResetFiltersButtonListener() {
     const resetFiltersButton = document.getElementById('reset-filters');
+
     resetFiltersButton.addEventListener('click', () => {
       this.recipesChannel.filter_recipes({ rating: null, ingredients_ids: null });
+
+      document.getElementById('recipes-rating-slider').value = 0;
+
+      document.querySelectorAll('.ingredient-filter-btn').forEach((button) => {
+        button.classList.remove('btn-outline-success');
+        button.classList.add('btn-outline-secondary');
+      });
     });
   }
 
@@ -159,5 +172,5 @@ class RecipesApp {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const recipesApp = new RecipesApp();
+  new RecipesApp();
 });
