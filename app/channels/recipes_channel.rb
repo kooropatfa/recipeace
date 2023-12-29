@@ -10,7 +10,7 @@ class RecipesChannel < ApplicationCable::Channel
   end
 
   def filter_recipes(data)
-    recipes_ids = Recipes::FilterService.new(data.with_indifferent_access).call
+    recipes_ids = Recipes::FilterService.call(data.with_indifferent_access)
 
     recipes = sort_and_serialize(recipes_ids)    
 

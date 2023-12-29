@@ -2,7 +2,7 @@
 
 module Recipes
   class FilterService
-    def self.call()
+    def self.call(params)
       new(params).call
     end
     
