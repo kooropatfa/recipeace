@@ -8,9 +8,44 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_pack_tag 'recipes' %>
+
+    <%# Please forgive me styling here and inline styles.
+        CSS should be of course in appropriate stylesheet files. %>
+     <style>
+      body {
+        padding-top: 120px;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        z-index: 1000;
+        padding: 20px;
+      }
+
+      .logo {
+        width: 5rem;
+        height: 5rem;
+      }
+    </style>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="header shadow" style="display: flex; align-items: center; justify-content: center;">
+      <%= image_tag('logo.jpeg', class: 'logo mr-3', style: 'position: absolute; left: 0.7rem; top: 0.7rem;') %>
+
+      <div class="text-center">
+        <h2 class="mt-3 header-title" data-web-socket-url="<%= Rails.application.config.web_socket_url %>">
+          Find the best recipes basing on ingredients you have at home
+        </h2>
+      </div>
+    </div>
+
+    <div style='margin-top: 30px'>
+      <%= yield %>
+    </div>
   </body>
 </html>

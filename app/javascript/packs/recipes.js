@@ -2,7 +2,7 @@ import ActionCable from 'actioncable';
 
 class RecipesApp {
   constructor() {
-    const webSocketUrl = document.querySelector('h1').dataset.webSocketUrl;
+    const webSocketUrl = document.querySelector('h2').dataset.webSocketUrl;
 
     this.cable = ActionCable.createConsumer(webSocketUrl);
     this.channelId = this.generateChannelId();
@@ -50,7 +50,7 @@ class RecipesApp {
   
     recipes.forEach((recipe) => {
       let recipe_html  = `
-        <div class="card mb-2" style="width: 80rem;">
+        <div class="card mb-2 shadow" style="width: 80rem;">
           <div class="card-body">
             <h4 class="card-title text-center">${recipe.title}</h5>
             <p class="text-center">Rating: ${recipe.rating} </p>
