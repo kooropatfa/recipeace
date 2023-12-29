@@ -1,24 +1,19 @@
-# README
+# Recipeace
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Description
 
-Things you may want to cover:
+**Recipeace is an app that allows users to search for recipes based on ingredients they have on hand.** 
 
-* Ruby version
+This is a demo web application created on recruitment process purposes and may contain some shortcomings but the main goal was to present some code.
 
-* System dependencies
+## Installation
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+1. Clone the repository
+2. Run `bundle install` to install gems
+3. Create database with `rails db:create`
+4. Run migrations `rails db:migrate`
+5. Import recipes and ingredients with `rake mealdb:import_recipes_and_ingredients`
+6. Install packages with `yarn install`
+7. Run `rails s` to start the server
+8. Visit `localhost:3000` in your browser
+9. Enjoy!
