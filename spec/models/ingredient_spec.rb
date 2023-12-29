@@ -13,4 +13,3 @@ RSpec.describe Ingredient, type: :model do
     expect(ingredient).to be_valid
   end
 end
-

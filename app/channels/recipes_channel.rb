@@ -12,7 +12,7 @@ class RecipesChannel < ApplicationCable::Channel
   def filter_recipes(data)
     recipes_ids = Recipes::FilterService.call(data.with_indifferent_access)
 
-    recipes = sort_and_serialize(recipes_ids)    
+    recipes = sort_and_serialize(recipes_ids)
 
     ActionCable.server.broadcast(channel, { recipes: recipes })
   end
@@ -27,14 +27,14 @@ class RecipesChannel < ApplicationCable::Channel
   # but it should be moved to a service or a decorator.
   def sort_and_serialize(recipes_ids)
     Recipe.includes(:ingredients)
-      .where(id: recipes_ids)
-      .order(:title).map do |recipe|
-        recipe.serializable_hash(methods: :rating,
-                                include: {
-                                  recipe_ingredients: {
-                                    include: :ingredient 
-                                  }
-                                })
+          .where(id: recipes_ids)
+          .order(:title).map do |recipe|
+      recipe.serializable_hash(methods: :rating,
+                               include: {
+                                 recipe_ingredients: {
+                                   include: :ingredient
+                                 }
+                               })
     end
   end
 end

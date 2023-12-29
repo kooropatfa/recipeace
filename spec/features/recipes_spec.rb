@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 # should be Rspec.feature
-RSpec.describe 'Recipes integration', type: :feature, js: true, 
-  skip: 'Skipping this test due to Selenium configuration issues that I came across. It that take too for the demo project and I hope it is fine.' do
+RSpec.describe 'Recipes integration', type: :feature, js: true,
+                                      skip: 'Skipping this test due to Selenium configuration issues that I came across. It that take too for the demo project and I hope it is fine.' do
   let!(:recipe1) { create(:recipe, :with_3_ratings) } # average rating for these recipes is 4
   let!(:recipe2) { create(:recipe, :with_3_ratings) }
   let!(:recipe3) { create(:recipe, :with_3_ratings) }
@@ -14,7 +14,7 @@ RSpec.describe 'Recipes integration', type: :feature, js: true,
   let(:ingredient3) { create(:ingredient) }
 
   let!(:recipe1_ingredient1) { create(:recipe_ingredient, recipe: recipe1, ingredient: ingredient1) }
-  
+
   let!(:recipe2_ingredient2) { create(:recipe_ingredient, recipe: recipe2, ingredient: ingredient2) }
   let!(:recipe2_ingredient2) { create(:recipe_ingredient, recipe: recipe2, ingredient: ingredient2) }
 

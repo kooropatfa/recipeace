@@ -14,10 +14,10 @@ RSpec.describe RecipesChannel, type: :channel do
   it 'broadcasts an error on unsubscribed', skip: 'Debugging in progress...' do
     subscribe(channel_id: channel_id)
     error = 'Action not foreseen ;)'
-  
+
     expect(ActionCable.server).to receive(:broadcast)
       .with("recipes_channel_#{channel_id}", hash_including(error: error))
-  
+
     unsubscribe
   end
 

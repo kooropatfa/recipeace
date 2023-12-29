@@ -5,7 +5,7 @@ module Recipes
     def self.call(params)
       new(params).call
     end
-    
+
     def call
       filter_recipes
     end
@@ -18,7 +18,7 @@ module Recipes
       @cached_recipes_ids = cached_recipes_ids
       @recipes = Recipe.where(id: @cached_recipes_ids || Recipe.ids)
     end
-    
+
     def filter_recipes
       return @recipes if @cached_recipes_ids # can be an empty array
 
@@ -36,9 +36,7 @@ module Recipes
     def filter_by_rating
       return unless @rating
 
-      unless @rating.between?(0, 5)
-        raise ArgumentError, 'Raiting should be between 0 and 5'
-      end
+      raise ArgumentError, 'Raiting should be between 0 and 5' unless @rating.between?(0, 5)
 
       @recipes = @recipes.with_rating_higher_or_equal_to(@rating)
     end
@@ -52,9 +50,7 @@ module Recipes
     def cached_recipes_ids(&block)
       return Rails.cache.read(cache_key) unless block_given?
 
-      return Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
-        yield
-      end
+      Rails.cache.fetch(cache_key, expires_in: 30.minutes, &block)
     end
 
     def cache_key

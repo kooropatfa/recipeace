@@ -34,9 +34,9 @@ namespace :mealdb do
     ActiveRecord::Base.transaction do
       (1..20).each do |i|
         ingredient_name = recipe_data["strIngredient#{i}"]
-        
+
         break if ingredient_name.blank?
-        
+
         quantity = recipe_data["strMeasure#{i}"]
         ingredient = Ingredient.find_or_create_by(name: ingredient_name)
         recipe_ingredient = RecipeIngredient.new(ingredient: ingredient, recipe: recipe, quantity: quantity)

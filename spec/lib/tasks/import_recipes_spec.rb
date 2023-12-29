@@ -20,9 +20,13 @@ RSpec.describe 'mealdb:import_recipes_and_ingredients' do
       context 'when the data does not exist' do
         it 'imports recipes and ingredients' do
           expect { task.invoke }.to change { Recipe.count }.by(1)
-            .and change { Ingredient.count }.by(2)
-            .and change { RecipeIngredient.count }.by(2)
-            .and change { RecipeRating.count }.by(5)
+                                                           .and change { Ingredient.count }.by(2)
+                                                                                           .and change {
+                                                                                                  RecipeIngredient.count
+                                                                                                }.by(2)
+                                                                                                 .and change {
+                                                                                                        RecipeRating.count
+                                                                                                      }.by(5)
         end
       end
 
@@ -30,7 +34,7 @@ RSpec.describe 'mealdb:import_recipes_and_ingredients' do
         it 'does not import recipes that already exist' do
           Recipe.create(mealdb_id: 123, title: 'Kiwi donuts', instructions: 'Prepare.')
 
-          expect { task.invoke }.not_to change { Recipe.count }
+          expect { task.invoke }.not_to(change { Recipe.count })
         end
 
         it 'does not import ingredients that already exist' do
@@ -41,14 +45,14 @@ RSpec.describe 'mealdb:import_recipes_and_ingredients' do
         end
       end
     end
-  
+
     context 'when the API request fails' do
       before do
         allow(HTTParty).to receive(:get).and_return(double(code: 401, body: 'No recipes for you!'))
       end
 
       it 'handles the failure gracefully' do
-        expect { task.invoke }.not_to change { Recipe.count }
+        expect { task.invoke }.not_to(change { Recipe.count })
       end
     end
   end
@@ -61,7 +65,7 @@ RSpec.describe 'mealdb:import_recipes_and_ingredients' do
       'strIngredient1' => 'Donuts',
       'strMeasure1' => 'many',
       'strIngredient2' => 'Kiwi',
-      'strMeasure2' => 'some',
+      'strMeasure2' => 'some'
     }
   end
 end

@@ -21,7 +21,6 @@ RSpec.describe Recipe, type: :model do
 
   describe 'scopes' do
     context 'ratings' do
-
       describe '.with_rating_higher_than' do
         context 'when given value is not a number' do
           it 'raises ArgumentError' do
@@ -62,7 +61,7 @@ RSpec.describe Recipe, type: :model do
         let!(:recipe3_ingredient1) { create(:recipe_ingredient, recipe: recipe3, ingredient: ingredient1) }
         let!(:recipe3_ingredient2) { create(:recipe_ingredient, recipe: recipe3, ingredient: ingredient2) }
         let!(:recipe3_ingredient3) { create(:recipe_ingredient, recipe: recipe3, ingredient: ingredient3) }
-        
+
         it 'returns recipes with specified ingredient ids' do
           recipe_ingredients_ids = [ingredient1.id, ingredient2.id]
           result = described_class.with_ingredients(recipe_ingredients_ids)

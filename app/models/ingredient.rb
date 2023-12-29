@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # frozen_stirng_literal: true
 
 class Ingredient < ApplicationRecord
@@ -6,4 +8,3 @@ class Ingredient < ApplicationRecord
 
   validates :name, presence: true
 end
-
